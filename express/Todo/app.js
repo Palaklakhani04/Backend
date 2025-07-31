@@ -31,10 +31,16 @@ app.get("/todos", (req, res) => {
 app.get("/todos/:id" , (req, res) => {
     const taskId = Number(req.params.id)
     const data = todos.filter((todo) => todo.id === taskId)
+    if (!data) {
+        return res.status(404).json({ message: 'Todo not found' });
+    }
     res.json(data)
 })
 
 app.post("/todos" , (req, res) => {
+    if(!req.body.task){
+        return res.status(400).json({ message: 'Task is required' });
+    }
     const newTask = {
         id:todos.length + 1,
         task:req.body.task,
