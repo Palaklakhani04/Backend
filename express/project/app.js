@@ -9,6 +9,14 @@ app.use(express.json())
 const values = fs.readFileSync("Data.json", "utf-8") 
 const data = JSON.parse(values)
 
+const saveData = (res) => {
+    fs.promises.writeFile('Data.json', JSON.stringify(data), "utf-8")
+    .then(() => {
+            return res.status(201).json("data successfuly updated")
+        }
+    )
+    .catch((error)=> console.error(error))
+}
 
 app.get("/items", (req ,res) => {
    fs.promises.readFile("Data.json", "utf-8")
@@ -28,12 +36,7 @@ app.post('/items' , (req , res) => {
         price: req.body.price
     }
     data.push(newItem)
-    fs.promises.writeFile('Data.json', JSON.stringify(data), "utf-8")
-    .then(() => {
-            return res.status(201).json("data post")
-        }
-    )
-    .catch((error)=> console.error(error))
+    saveData(res)
 })
 
 app.put('/items/:id', (req, res) => {
@@ -44,13 +47,8 @@ app.put('/items/:id', (req, res) => {
             ...data[dataIndex],
             ...req.body
         }
-        fs.promises.writeFile('Data.json', JSON.stringify(data), "utf-8")
-        .then(() => {
-                return res.status(200).json("data updated")
-            }
-        )
-        .catch((error)=> console.error(error))
-        }
+        saveData(res)
+    }
 })
 
 app.delete('/items/:id', (req, res) => {
@@ -58,12 +56,7 @@ app.delete('/items/:id', (req, res) => {
     const dataIndex = data.findIndex(i => i.id === itemId)
     if(dataIndex != -1){
         data.splice(dataIndex, 1)
-        fs.promises.writeFile('Data.json', JSON.stringify(data), "utf-8")
-        .then(() => {
-                return res.status(200).json("data deleted")
-            }
-        )
-        .catch((error)=> console.error(error))
+        saveData(res)
     }
 })
 

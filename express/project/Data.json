@@ -4,5 +4,8 @@
   { "id": 3, "name": "book", "price": 70 },
   { "id": 4, "name": "mouse", "price": 200 },
   { "id": 5, "name": "plant", "price": 500 },
-  { "id": 6, "name": "cup", "price": 400 }
+  { "id": 6, "name": "cup", "price": 400 },
+  { "id": 7, "name": "Water-bottle", "price": 700 },
+  { "id": 8, "name": "chare", "price": 400 },
+  { "id": 9, "name": "doll", "price": 400 }
 ]
