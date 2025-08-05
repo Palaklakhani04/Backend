@@ -1,25 +1,22 @@
 import express from "express"
 import connectMongoDb from "./connection.js"
-import { router } from "./routes/book.js";
+import { bookRouter } from "./routes/book.js";
 import cors from 'cors'
-import { BookDetails } from "./models/bookDetail.js";
+import dotenv from 'dotenv'
 
+dotenv.config()
+const port = process.env.PORT
+const dbHost = process.env.DB_HOST
 const app = express()
-const PORT = 3000
 
 app.use(express.json())
+app.use(cors({
+    origin: process.env.FRONTEND_PORT,
+    methods: ["GET", "POST", "PUT", "DELETE"]
+}));
 
-connectMongoDb("mongodb://127.0.0.1:27017/books")
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => console.log("MongoDB error" , err));
+connectMongoDb(dbHost)
 
-const corsOptions = {
-      origin: 'http://localhost:5173', // Allow only this origin
-      methods: 'GET,HEAD,PUT,DELETE', // Allowed HTTP methods
-    };
+app.use("/books",bookRouter)
 
-app.use(cors(corsOptions));
-
-app.use("/books",router)
-
-app.listen(PORT , () => console.log(`server running at port: ${PORT}`))
+app.listen(port , () => console.log(`server running at port: ${port}`))

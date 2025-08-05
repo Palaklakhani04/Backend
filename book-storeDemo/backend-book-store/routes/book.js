@@ -1,11 +1,11 @@
 import express from "express"
 import { getAllBooks, getBookByCondition, updateBookByCondition, deleteBookByCondition } from "../controllers/books.js"
 
-export const router = express.Router()
+export const bookRouter = express.Router()
 
-router.get("/",getAllBooks)
+bookRouter.get("/",getAllBooks)
 
-router
+bookRouter
     .route("/:condition")
     .get(getBookByCondition)
     .put(updateBookByCondition)
