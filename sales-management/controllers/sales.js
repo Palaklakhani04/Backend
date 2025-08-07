@@ -175,7 +175,7 @@ export async function getTotalExceedAvgQunetity(req, res){
 export async function addProduct(req, res) {
     try {
         const { title , price, description } = req.body
-        const thumbnail = `${req.file.filename}`
+        const thumbnail = req.file.filename
 
         const newProduct = new Products({
             title,
@@ -183,7 +183,6 @@ export async function addProduct(req, res) {
             price,
             thumbnail,
         })
-
         const product = await newProduct.save()
         console.log(product)
         res.status(201).json(product)
