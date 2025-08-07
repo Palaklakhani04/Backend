@@ -1,7 +1,6 @@
 import { Customer } from "../models/customer.js";
 import  Orders  from "../models/orders.js";
 import { Products } from "../models/products.js";
-import path from "path"
 
 export async function getTotalSalesPerCust(req, res){
     try{
