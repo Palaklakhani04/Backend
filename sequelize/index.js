@@ -2,6 +2,7 @@ import express from "express"
 import dotenv from "dotenv"
 import { dbConnection ,sequelize} from "./config/dbConnection.js"
 import userRouter from "./routes/user.js"
+import './association.js'
 
 dotenv.config()
 

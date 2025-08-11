@@ -1,9 +1,15 @@
 import express  from "express"
-import { addUsers, deleteUsersById, getAllUsers, getUserById, insert, updateUsersById } from "../controllers/user.js";
+import { addUsers, createEmployee, deleteUsersById, getAllEmployee, getAllUsers, getUserById, insert, updateUsersById } from "../controllers/user.js";
 
 const userRouter = express.Router()
 
+userRouter.post('/createemployee', createEmployee)
+
+userRouter.get('/getallemployee', getAllEmployee)
+
 userRouter.get('/', insert)
+
+// CURD api UserDetail model
 
 userRouter.get('/getallusers', getAllUsers)
 

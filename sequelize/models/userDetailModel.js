@@ -3,8 +3,28 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../config/dbConnection.js";
 
 const UserDetail = sequelize.define('UserDetail', {
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
+    firstName: {
+      type:DataTypes.STRING,
+      get() {
+        const rowVal = this.getDataValue('firstName');
+        return rowVal ? rowVal.toUpperCase() : null;
+      }
+    },
+    lastName: {
+      type:DataTypes.STRING,
+      set(value) {
+        this.setDataValue('lastName', value + " from india");
+      }
+    },
+    fullName: {
+      type:DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName}`
+      },
+      set(val){
+        throw new Error('do not try to set fullname value')
+      }
+    },
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     age: DataTypes.INTEGER,
