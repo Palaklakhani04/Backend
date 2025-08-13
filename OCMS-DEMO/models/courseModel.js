@@ -14,12 +14,10 @@ const Course = sequelize.define('courses',
         instructorId: {
             type: DataTypes.INTEGER,
             allowNull:false,
-            unique:true
         },
         categorieId:{
             type: DataTypes.INTEGER,
             allowNull:false,
-            unique:true
         }
     },
     {   

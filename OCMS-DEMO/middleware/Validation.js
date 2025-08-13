@@ -17,3 +17,8 @@ export const courseSchema = Joi.object({
     instructorId: Joi.number().min(0).required(),
     categorieId: Joi.number().min(0).required()
 })
+
+export const enrollmentSchema = Joi.object({
+    studentId: Joi.number().min(0).required(),
+    courseId: Joi.number().min(0).required()
+})

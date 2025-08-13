@@ -1,11 +1,50 @@
 import { courseSchema } from "../middleware/Validation.js";
-import Categorie from "../models/categoriesModel.js";
-import Course from "../models/courseModel.js";
-import User from "../models/userModel.js";
+import { Categorie, User, Course } from "../association.js"
+import { Op } from "sequelize";
 
 export async function getAllCourses(req, res){
     try {
-        const coures = await Course.findAll({})
+        const { limit, offset, search, sortBy, sortorder , categorieId} = req.query;
+
+        const options = {
+            limit: Number(limit) || 10,
+            offset: Number(offset) || 0,
+            where:{},
+            order:[],
+        }
+
+        if(search) {
+            options.where.title = {
+                [Op.like]: `%${search}%`
+            }
+        }
+        if(categorieId){
+            options.where.categorieId = categorieId
+        }
+
+        if(sortBy && sortorder) {
+            options.order.push([sortBy, sortorder.toUpperCase()])
+        }else{
+            options.order.push(['price', 'DESC'])
+        }
+
+        const coures = await Course.findAll({
+            options,
+            include :[
+                {
+                    model: Categorie,
+                    attributes:["id","name"],
+                    as: 'category'
+                },
+                {
+                    model: User,
+                    attributes:["id","name", "email"],
+                    as: 'instructor'
+                    
+                }
+            ]
+        })
+        console.log(coures)
         if(!coures) return res.status(404).json([])
         return res.status(200).json(coures)
     } catch (error) {
@@ -25,7 +64,8 @@ export async function getCourseById(req, res){
         if(!course) return res.status(404).json({msg : "categorie not found"})
         return res.status(200).json(course)
     } catch (error) {
-        
+        console.log(error)
+        return res.status(500).json({ error : error.message})
     }
 }
 
@@ -60,7 +100,8 @@ export async function updateCourseById(req, res){
         await coures.update(req.body)
         return res.status(200).json({message : 'coures Updated'})
     } catch (error) {
-        
+        console.log(error)
+        return res.status(500).json({ error : error.message})
     }
 }
 
@@ -77,6 +118,7 @@ export async function deleteCourseById(req, res){
         return res.status(200).json({message : 'course deleted'})
         
     } catch (error) {
-        
+        console.log(error)
+        return res.status(500).json({ error : error.message})
     }
 }

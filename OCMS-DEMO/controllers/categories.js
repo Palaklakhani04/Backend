@@ -1,5 +1,5 @@
 import { categorieSchema } from "../middleware/Validation.js"
-import Categorie from "../models/categoriesModel.js"
+import {Categorie} from "../association.js"
 
 export async function getAllCategories(req, res){
     try {

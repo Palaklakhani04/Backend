@@ -5,13 +5,11 @@ const Enrollment = sequelize.define('enrollment',
     {
         studentId: {
             type: DataTypes.INTEGER,
-            allowNull:false,
-            unique:true
+            allowNull:false
         },
         courseId:{
             type: DataTypes.INTEGER,
-            allowNull:false,
-            unique:true
+            allowNull:false
         }
     },
     {   

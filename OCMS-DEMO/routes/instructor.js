@@ -1,5 +1,5 @@
 import express from "express"
-import { createInstructor, deleteInstructorById, getAllInstructor, getInstructorById, updateInstructorById } from "../controllers/instructor.js"
+import { createInstructor, deleteInstructorById, getAllInstructor, getInstructorAllCourses, getInstructorById, updateInstructorById } from "../controllers/instructor.js"
 
 const router = express.Router()
 
@@ -13,5 +13,7 @@ router
     .get(getInstructorById)
     .put(updateInstructorById)
     .delete(deleteInstructorById)
+
+router.get("/instructor/:id/courses", getInstructorAllCourses)
 
 export default router

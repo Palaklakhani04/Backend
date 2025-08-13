@@ -1,5 +1,5 @@
 import { userSchema } from "../middleware/Validation.js"
-import User from "../models/userModel.js"
+import {Course, User} from "../association.js"
 
 export async function getAllInstructor(req, res){
     try {
@@ -71,6 +71,7 @@ export async function updateInstructorById(req, res){
 export async function deleteInstructorById(req, res){
     try {
         const userId = req.params.id
+
         const instructor = await User.findOne({
             where:{
                 id: userId,
@@ -86,3 +87,20 @@ export async function deleteInstructorById(req, res){
     }
 }
 
+export async function getInstructorAllCourses(req ,res) {
+    try {
+        const Id = req.params.id
+
+        const allCouresByInstructor = await Course.findAll({
+            where :{
+                instructorId: Id
+            }
+        })
+        if(!allCouresByInstructor) return res.status(404).json({msg : "user not found"})
+        return res.status(200).json(allCouresByInstructor)
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error : error.message})
+    }
+}
