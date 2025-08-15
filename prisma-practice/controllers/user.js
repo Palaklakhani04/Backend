@@ -65,7 +65,20 @@ export async function getUserById(req, res) {
     const user = await prisma.user.findFirst({
         where: {
             id: Number(userId)
+        },
+        include:{
+            post:{
+                select:{
+                    title:true,
+                    comment:{
+                        select:{
+                            comment:true
+                        }
+                    }
+                }
+            }
         }
+        
     })
 
     if(!user) return res.status(404).json({message: "user not found"})
@@ -85,4 +98,25 @@ export async function deleteUserById(req, res) {
     })
 
     return res.status(200).json({message: "deleted successfully"})
+}
+
+export async function getPostByPsw(req, res) {
+    const user = await prisma.user.findMany({
+        skip:1,
+        take:3,
+        where:{
+            OR : [{
+                email:{
+                    contains: "@gmail.com"
+                }
+            },{
+                email: {
+                    contains: "company.com"
+                }
+            }
+            ]
+        }
+    })
+
+    res.json(user)
 }

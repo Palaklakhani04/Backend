@@ -35,7 +35,16 @@ export async function updatePostById(req, res) {
 
 export async function getAllPost(req , res) {
 
-    const allPost = await prisma.post.findMany({})
+    const allPost = await prisma.post.findMany({
+        include:{
+            user: {
+                select :{
+                    name: true,
+                    email: true
+                }
+            }
+        }
+    })
 
     if(!allPost) return res.status(404).json({message: "post not found"})
 
@@ -48,8 +57,8 @@ export async function getPostById(req, res) {
 
     const post = await prisma.post.findFirst({
         where: {
-            id: Number(postId)
-        }
+            id: Number(postId),
+        },
     })
 
     if(!post) return res.status(404).json({message: "post not found"})
@@ -70,3 +79,4 @@ export async function deletePostById(req, res) {
 
     return res.status(200).json({message: "deleted successfully"})
 }
+
