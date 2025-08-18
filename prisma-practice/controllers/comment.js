@@ -1,4 +1,3 @@
-import prisma from "../config/dbConnection.js"
 import { createComments, deleteByCommentId, getallComments, getByCommentId, updateByCommentId } from "../service/comment.js"
 import message from "../utils/message.js"
 

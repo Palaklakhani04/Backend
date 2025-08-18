@@ -1,4 +1,3 @@
-import prisma from "../config/dbConnection.js"
 import { createPosts, deleteByPostId, getAllPosts, getByPostId, updateByPostId } from "../service/post.js"
 import message from "../utils/message.js"
 

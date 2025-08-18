@@ -1,4 +1,3 @@
-import prisma from "../config/dbConnection.js"
 import message from "../utils/message.js"
 import { checkEmail, createUsers, deleteByUserId, getAllUser, getByEmail, getByUserId, updatedById } from "../service/user.js"
 
