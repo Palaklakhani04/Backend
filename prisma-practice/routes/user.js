@@ -1,5 +1,5 @@
 import express from "express"
-import { createUser, updateById, getAllUsers, getUserById, deleteUserById, getPostByPsw } from "../controllers/user.js"
+import { createUser, updateById, getAllUsers, getUserById, deleteUserById, getUsersByEmailEndsWiths } from "../controllers/user.js"
 
 const router = express.Router()
 
@@ -8,7 +8,7 @@ router
     .get(getAllUsers)
     .post(createUser)
     
-router.get("/psw",getPostByPsw)
+router.get("/email",getUsersByEmailEndsWiths)
 
 router
     .route("/:id")

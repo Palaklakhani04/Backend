@@ -76,7 +76,7 @@ export const deleteByUserId = async (id) => {
     })
 }
 
-export const getByEmail = async () => {
+export const getUserByEmailEndsWith = async () => {
     return await prisma.user.findMany({
             skip:1,
             take:3,
@@ -95,3 +95,10 @@ export const getByEmail = async () => {
         })
 }
 
+export const findById = async (id) => {
+    return await prisma.user.findFirst({
+        where: {
+            id:Number(id)
+        }
+    })
+}
