@@ -39,7 +39,6 @@ export const getAllUser = async () => {
             include: {
                 post :{
                     select:{
-                        commentCount:true,
                         title: true
                     }
                 }
