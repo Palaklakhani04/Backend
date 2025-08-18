@@ -4,11 +4,11 @@ import { createComment, deleteCommentById, getAllComment, getCommentById, update
 
 const router = express.Router()
 
-router.route("/comment")
+router.route("/")
     .get(getAllComment)
     .post(createComment)
 
-router.route("/comment/:id")
+router.route("/:id")
     .get(getCommentById)
     .put(updateCommentById)
     .delete(deleteCommentById)

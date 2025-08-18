@@ -1,82 +1,81 @@
 import prisma from "../config/dbConnection.js"
+import { createPosts, deleteByPostId, getAllPosts, getByPostId, updateByPostId } from "../service/post.js"
+import message from "../utils/message.js"
 
 export async function createPost(req, res) {
+    try {
+        const { userId, title, description } = req.body
+        
+        const newPost = await createPosts( userId, title, description )
 
-    const { userId, title, description } = req.body
-    
-    const newPost = await prisma.post.create({
-        data:{
-            userId,
-            title,
-            description
-        }
-    })
-    return res.status(200).json(newPost, {message: "Post created successfully"})
+        return res.status(200).json(newPost, {message: message.SUCCESS.DATA_CREATED})
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: message.ERROR.SERVER_ERROR})
+    }
+
 }
 
 export async function updatePostById(req, res) {
+    try {
+        const { id } = req.params
+    
+        const { userId, title, description } = req.body
+    
+        await updateByPostId( id, userId, title, description )
 
-    const postId = req.params.id
+        return res.status(200).json({message: message.SUCCESS.DATA_UPDATED})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: message.ERROR.SERVER_ERROR})
+    }
 
-    const { userId, title, description } = req.body
-
-    const updated = await prisma.post.update({
-        where: {
-            id: Number(postId)
-        },
-        data: {
-            userId,
-            title,
-            description
-        }
-    })
-    return res.status(200).json({message: "updated successfully"})
 }
 
 export async function getAllPost(req , res) {
+    try {
+        const allPost = await getAllPosts()
+    
+        if(!allPost) return res.status(404).json([],{message: message.ERROR.NOT_FOUND})
+    
+        return res.status(200).json({allPost, message: message.SUCCESS.DATA_FETCHED})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: message.ERROR.SERVER_ERROR})
+    }
 
-    const allPost = await prisma.post.findMany({
-        include:{
-            user: {
-                select :{
-                    name: true,
-                    email: true
-                }
-            }
-        }
-    })
-
-    if(!allPost) return res.status(404).json({message: "post not found"})
-
-    return res.status(200).json(allPost)
 }
 
 export async function getPostById(req, res) {
-
-    const postId = req.params.id
-
-    const post = await prisma.post.findFirst({
-        where: {
-            id: Number(postId),
-        },
-    })
-
-    if(!post) return res.status(404).json({message: "post not found"})
-
-    return res.status(200).json(post)
-
+    try {
+        const { id } = req.params
+    
+        const post = await getByPostId(id)
+    
+        if(!post) return res.status(404).json({message: message.ERROR.NOT_FOUND})
+    
+        return res.status(200).json({post, message: message.SUCCESS.DATA_FETCHED})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: message.ERROR.SERVER_ERROR})
+    }
 }
 
 export async function deletePostById(req, res) {
+    try {
+        const { id } = req.params
     
-    const postId = req.params.id
-
-    await prisma.post.delete({
-        where: {
-            id: Number(postId)
-        }
-    })
-
-    return res.status(200).json({message: "deleted successfully"})
+        await deleteByPostId(id)
+    
+        return res.status(200).json({message: message.SUCCESS.DATA_DELETED})
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: message.ERROR.SERVER_ERROR})
+    }
 }
 

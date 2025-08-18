@@ -3,11 +3,11 @@ import { createPost, deletePostById, getAllPost, getPostById, updatePostById } f
 
 const router = express.Router()
 
-router.route("/post")
+router.route("/")
     .get(getAllPost)
     .post(createPost)
 
-router.route("/post/:id")
+router.route("/:id")
     .get(getPostById)
     .put(updatePostById)
     .delete(deletePostById)

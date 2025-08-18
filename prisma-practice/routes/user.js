@@ -4,14 +4,14 @@ import { createUser, updateById, getAllUsers, getUserById, deleteUserById, getPo
 const router = express.Router()
 
 router
-    .route("/user")
+    .route("/")
     .get(getAllUsers)
     .post(createUser)
     
-router.get("/user/psw",getPostByPsw)
+router.get("/psw",getPostByPsw)
 
 router
-    .route("/user/:id")
+    .route("/:id")
     .put(updateById)
     .get(getUserById)
     .delete(deleteUserById)

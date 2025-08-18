@@ -8,6 +8,12 @@ const app = express()
 
 app.use(express.json())
 
-app.use("/api", userRouter, postRouter, commentRouter)
+app.use("/api/user", userRouter)
 
-app.listen(process.env.PORT, () => console.log("server is running on localhost"))
+app.use("/api/post", postRouter)
+
+app.use("/api/comment", commentRouter)
+
+app.listen(process.env.PORT, () => {
+    console.log("server is running on localhost")
+})
