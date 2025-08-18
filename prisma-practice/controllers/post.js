@@ -41,7 +41,33 @@ export async function updatePostById(req, res) {
 
 export async function getAllPost(req, res) {
   try {
-    const allPost = await getAllPosts();
+
+    const {search, description, offset, limit } = req.query
+
+    const page = Number(offset) || 1
+    const pageSize = Number(limit) || 5
+
+    const skip = (page - 1) * pageSize
+    const take = pageSize
+
+    const filter = {}
+
+    if(search){
+        filter.title = {
+            title: search,
+            mode: "insensitive"
+        }
+    }
+
+    if(description){
+        filter.description = {
+            description: description,
+            mode: "insensitive"
+        }
+    }
+
+
+    const allPost = await getAllPosts(filter ,skip , take);
 
     return res
       .status(200)

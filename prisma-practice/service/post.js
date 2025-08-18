@@ -23,8 +23,11 @@ export const updateByPostId = async ( id, userId, title, description ) => {
         })
 }
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (filter, skip,take) => {
     return await prisma.post.findMany({
+            where: filter,
+            skip,
+            take,
             include:{
                 user: {
                     select :{

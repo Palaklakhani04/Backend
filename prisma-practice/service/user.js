@@ -34,8 +34,11 @@ export const updatedById = async (id, name , email, password) => {
 }
 
 
-export const getAllUser = async () => {
+export const getAllUser = async (filter, skip, take) => {
     return await prisma.user.findMany({
+            where: filter,
+            skip,
+            take,
             include: {
                 post :{
                     select:{

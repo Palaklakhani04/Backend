@@ -32,13 +32,13 @@ export async function updateById(req, res) {
   try {
     const { id } = req.params;
 
-    const findId = await findById(id)
-
-    if(!findId) throw new Error( message.ERROR.NOT_FOUND )
-
     const { name, email, password } = req.body;
+    
+    const user = await findById(id)
 
-    const updatedUser = await updatedById(id, name, email, password);
+    if(!user) throw new Error( message.ERROR.NOT_FOUND )
+
+    await updatedById(id, name, email, password);
 
     return res.status(200).json({success:true, message: message.SUCCESS.DATA_UPDATED });
 
@@ -49,11 +49,35 @@ export async function updateById(req, res) {
 
 export async function getAllUsers(req, res) {
   try {
-    const allUser = await getAllUser();
+    const { search, limit, offset, email } = req.query
+
+    const page = Number(offset) || 1
+    const pageSize = Number(limit) || 5
+
+    const skip = (page - 1) * pageSize
+    const take = pageSize
+
+    const filter = {}
+
+    if(search) {
+        filter.name = {
+            contains: search,
+            mode: 'insensitive'
+        }
+    }
+
+    if(email) {
+        filter.email = {
+            contains: email,
+            mode: 'insensitive'
+        }
+    }
+
+    const allUsers = await getAllUser(filter, skip, take);
 
     return res
       .status(200)
-      .json({ allUser, message: message.SUCCESS.DATA_FETCHED });
+      .json({ allUsers, message: message.SUCCESS.DATA_FETCHED });
 
   } catch (error) {
     res.status(500).json({ message: message.ERROR.SERVER_ERROR });
@@ -64,12 +88,10 @@ export async function getUserById(req, res) {
   try {
     const { id } = req.params;
 
-    const findId = await findById(id)
-
-    if(!findId) throw new Error( message.ERROR.NOT_FOUND )
-
     const user = await getByUserId(id);
 
+    if(!user) throw new Error( message.ERROR.NOT_FOUND )
+    
     return res
       .status(200)
       .json({ user, success:true, message: message.SUCCESS.DATA_FETCHED });
@@ -87,7 +109,7 @@ export async function deleteUserById(req, res) {
 
     if(!findId) throw new Error( message.ERROR.NOT_FOUND )
     
-    const deleteUser = await deleteByUserId(id);
+    await deleteByUserId(id);
 
     return res.status(200).json({success:true,  message: message.SUCCESS.DATA_DELETED });
 
