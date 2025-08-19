@@ -29,6 +29,7 @@ model Post {
   userId Int
   title String
   description String
+  thumbnail String
   commentCount Int @default(0)
   comment Comment[]
   createdAt DateTime @default(now())

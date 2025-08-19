@@ -1,11 +1,12 @@
 import prisma from "../config/dbConnection.js"
 
-export const createPosts = async ( userId, title, description ) => {
+export const createPosts = async ( userId, title, description, thumbnail ) => {
     return await prisma.post.create({
             data:{
-                userId,
+                userId: Number(userId),
                 title,
-                description
+                description,
+                thumbnail
             }
         })
 }

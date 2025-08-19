@@ -1,3 +1,4 @@
+import { postSchema } from "../middlewares/validation.js";
 import {
   createPosts,
   deleteByPostId,
@@ -9,26 +10,31 @@ import message from "../utils/message.js";
 
 export async function createPost(req, res) {
   try {
-    const { userId, title, description } = req.body;
+    const {error} = postSchema.validate(req.body)
+    if(error) return res.status(400).json({ message : error.details[0].message})
 
-    const newPost = await createPosts(userId, title, description);
+    const { userId, title, description } = req.body;
+    const thumbnail = req.file
+
+    const newPost = await createPosts(userId, title, description, thumbnail.path);
 
     return res.status(200).json({success:true, newPost, message: message.SUCCESS.DATA_CREATED });
 
   } catch (error) {
-    res.status(500).json({ message: message.ERROR.SERVER_ERROR });
+    res.status(500).json({ message: message.ERROR.SERVER_ERROR ,error:error });
   }
 }
 
 export async function updatePostById(req, res) {
   try {
-    const { id } = req.params;
+    const {error} = postSchema.validate(req.body)
+    if(error) return res.status(400).json({ message : error.details[0].message})
 
+    const { id } = req.params;
     const { userId, title, description } = req.body;
 
-    const findId = await getByPostId(id)
-
-    if(!findId) throw new Error(message.ERROR.NOT_FOUND)
+    const post = await getByPostId(id)
+    if(!post) throw new Error(message.ERROR.NOT_FOUND)
 
     await updateByPostId(id, userId, title, description);
 
@@ -54,14 +60,14 @@ export async function getAllPost(req, res) {
 
     if(search){
         filter.title = {
-            title: search,
+            endsWith: search,
             mode: "insensitive"
         }
     }
 
     if(description){
         filter.description = {
-            description: description,
+            contains: description,
             mode: "insensitive"
         }
     }
@@ -80,14 +86,13 @@ export async function getAllPost(req, res) {
 export async function getPostById(req, res) {
   try {
     const { id } = req.params;
-
     const post = await getByPostId(id);
-
     if (!post) throw new Error(message.ERROR.NOT_FOUND );
 
     return res
       .status(200)
       .json({ post, message: message.SUCCESS.DATA_FETCHED });
+
   } catch (error) {
     res.status(500).json({ message: message.ERROR.SERVER_ERROR, error:error.message });
   }
@@ -97,13 +102,12 @@ export async function deletePostById(req, res) {
   try {
     const { id } = req.params;
 
-    const findId = await getByPostId(id)
-
-    if(!findId) throw new Error(message.ERROR.NOT_FOUND)
+    const post = await getByPostId(id)
+    if(!post) throw new Error(message.ERROR.NOT_FOUND)
 
     await deleteByPostId(id);
-
     return res.status(200).json({success:true, message: message.SUCCESS.DATA_DELETED });
+
   } catch (error) {
     res.status(500).json({ message: message.ERROR.SERVER_ERROR, error:error.message });
   }

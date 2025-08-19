@@ -3,9 +3,8 @@ import { createPost, deletePostById, getAllPost, getPostById, updatePostById } f
 
 const router = express.Router()
 
-router.route("/")
-    .get(getAllPost)
-    .post(createPost)
+router.get("/",getAllPost)
+router.post("/",createPost)
 
 router.route("/:id")
     .get(getPostById)

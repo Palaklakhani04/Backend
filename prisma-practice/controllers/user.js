@@ -9,20 +9,24 @@ import {
   getUserByEmailEndsWith,
   updatedById,
 } from "../service/user.js";
+import { userSchema } from "../middlewares/validation.js";
 
 export async function createUser(req, res) {
   try {
+
+    const {error} = userSchema.validate(req.body)
+    if(error) return res.status(400).json({ message : error.details[0].message})
+
     const { name, email, password } = req.body;
 
-    const findEmail = await checkEmail(email);
-
-    if (findEmail) throw new Error( message.ERROR.EMAIL_EXISTS );
+    const userEmail = await checkEmail(email);
+    if (userEmail) throw new Error( message.ERROR.EMAIL_EXISTS );
 
     const newUser = await createUsers(name, email, password);
-
     return res
       .status(200)
       .json({ success:true, newUser, message: message.SUCCESS.DATA_CREATED });
+
   } catch (error) {
     res.status(500).json({ message: message.ERROR.SERVER_ERROR , error:error.message});
   }
@@ -30,16 +34,16 @@ export async function createUser(req, res) {
 
 export async function updateById(req, res) {
   try {
-    const { id } = req.params;
+    const {error} = userSchema.validate(req.body)
+    if(error) return res.status(400).json({ message : error.details[0].message})
 
+    const { id } = req.params;
     const { name, email, password } = req.body;
     
     const user = await findById(id)
-
     if(!user) throw new Error( message.ERROR.NOT_FOUND )
 
     await updatedById(id, name, email, password);
-
     return res.status(200).json({success:true, message: message.SUCCESS.DATA_UPDATED });
 
   } catch (error) {

@@ -1,5 +1,5 @@
 import express from "express"
-import { createComment, deleteCommentById, getAllComment, getCommentById, updateCommentById } from "../controllers/comment.js"
+import { createComment, deleteCommentById, getAllComment, updateCommentById } from "../controllers/comment.js"
 
 
 const router = express.Router()
@@ -9,7 +9,6 @@ router.route("/")
     .post(createComment)
 
 router.route("/:id")
-    .get(getCommentById)
     .put(updateCommentById)
     .delete(deleteCommentById)
 
