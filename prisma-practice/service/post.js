@@ -45,6 +45,13 @@ export const getByPostId = async (id) => {
             where: {
                 id: Number(id),
             },
+            include:{
+                _count:{
+                    select:{
+                        comment:true
+                    }
+                }
+            }
     })
 }
 
@@ -52,7 +59,7 @@ export const deleteByPostId = async (id) => {
     return await prisma.post.delete({
             where: {
                 id: Number(id)
-            }
+            },
         })
 }
 
